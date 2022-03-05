@@ -1,0 +1,49 @@
+version: "1.0.{build}"
+
+image: Visual Studio 2022
+
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: "{version}"
+  package_version: "{version}"
+  assembly_version: "{version}"
+  file_version: "{version}"
+  informational_version: "{version}"
+
+pull_requests:
+  do_not_increment_build_number: true
+
+branches:
+  only:
+    - main
+init:
+  # Good practise, because Windows line endings are different from Unix/Linux ones
+  - cmd: git config --global core.autocrlf true
+
+before_build:
+  - cmd: dotnet --version
+  - cmd: dotnet restore InteractiveExtensions.sln --verbosity q
+ 
+build_script:
+  - cmd: dotnet build InteractiveExtensions.sln -c Release
+
+after_build:
+  # For once the build has completed
+  - cmd: dotnet pack InteractiveExtensions.sln -o packages -c Release
+artifacts:
+  - path: "packages/**/*.nupkg"
+    name: NugetPacakges
+
+clone_depth: 1
+test_script:
+  - cmd: dotnet test InteractiveExtensions.sln
+deploy:
+  - provider: NuGet
+    api_key:
+      secure: 2rVyhSP7VBev5AaKvwPSXGY3Jc0Vhx4DKyDuc1k6TxyE6E3joCACpxG+AFyFNN6h
+
+    skip_symbols: false
+    artifact: /.*(\.|\.s)nupkg/
+    on:
+      branch: main

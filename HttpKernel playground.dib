@@ -1,0 +1,13 @@
+#!csharp
+
+#r "C:\dev\interactive-extensions\src\HttpKernel\bin\Debug\net6.0\HttpKernel.dll"
+
+#!csharp
+
+using Microsoft.DotNet.Interactive;
+
+await new HttpKernel.KernelExtension().OnLoadAsync(Kernel.Root);
+
+#!csharp
+
+#!http GET https://bing.com
