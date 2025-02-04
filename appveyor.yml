@@ -23,21 +23,21 @@ init:
 
 before_build:
   - cmd: dotnet --version
-  - cmd: dotnet restore InteractiveExtensions.sln --verbosity q
+  - cmd: dotnet restore interactive-extensions.sln --verbosity q
  
 build_script:
-  - cmd: dotnet build InteractiveExtensions.sln -c Release
+  - cmd: dotnet build interactive-extensions.sln -c Release
 
 after_build:
   # For once the build has completed
-  - cmd: dotnet pack InteractiveExtensions.sln -o packages -c Release
+  - cmd: dotnet pack interactive-extensions.sln -o packages -c Release
 artifacts:
   - path: "packages/**/*.nupkg"
     name: NugetPacakges
 
 clone_depth: 1
 test_script:
-  - cmd: dotnet test InteractiveExtensions.sln
+  - cmd: dotnet test interactive-extensions.sln
 deploy:
   - provider: NuGet
     api_key:
