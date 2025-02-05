@@ -3,7 +3,6 @@ using Microsoft.DotNet.Interactive.Connection;
 using Microsoft.DotNet.Interactive.Directives;
 using OllamaSharp;
 
-
 namespace Ollama.Interactive;
 
 public class ConnectOllamaDirective : ConnectKernelDirective<ConnectOllama>
@@ -27,7 +26,7 @@ public class ConnectOllamaDirective : ConnectKernelDirective<ConnectOllama>
         });
 
         var uriParameter = new KernelDirectiveParameter("--uri",
-            "The URI of the ollama server. (The default is http://127.0.0.1:11434.)");
+                                                        "The URI of the ollama server. (The default is http://127.0.0.1:11434.)");
 
         Parameters.Add(modelParameter);
 
@@ -52,5 +51,26 @@ public class ConnectOllamaDirective : ConnectKernelDirective<ConnectOllama>
         kernel.KernelInfo.Description = model?.Details.ToString();
 
         return [kernel];
+    }
+
+    public static void AddToRootKernel()
+    {
+        if (KernelInvocationContext.Current is { } context &&
+            context.HandlingKernel.RootKernel is CompositeKernel compositeKernel)
+        {
+            var connectOllamaDirective =
+                new ConnectOllamaDirective("ollama", "Connects a kernel for a specified model using Ollama");
+
+            compositeKernel.AddConnectDirective(connectOllamaDirective);
+
+            var message = """
+                          Added the `#!connect ollama` directive to connect to an Ollama model. Make sure that [Ollama](https://ollama.com/) is installed and running. To add kernels for different models, run code like this:
+                              
+                          ```
+                          #!connect ollama --model <model-name> --kernel-name <kernel-name>
+                          ```
+                          """;
+            context.DisplayAs(message, "text/markdown");
+        }
     }
 }
