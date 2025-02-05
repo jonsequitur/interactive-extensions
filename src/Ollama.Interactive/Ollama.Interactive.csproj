@@ -16,6 +16,7 @@
 		<Product>Peaky</Product>
 		<Company />
 		<Description>Use Ollama to experiment with large language models in Polyglot Notebooks</Description>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageTags>ollama dotnet-interactive polyglot-notebooks LLM</PackageTags>
 		<PackageProjectUrl>https://github.com/jonsequitur/interactive-extensions</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/jonsequitur/interactive-extensions</RepositoryUrl>
@@ -28,6 +29,7 @@
 
 	<ItemGroup>
 		<None Include="extension.dib" Pack="true" PackagePath="interactive-extensions/dotnet" />
+        <None Include="README.md" Pack="true" PackagePath="\"/>
 	</ItemGroup>
 	
 </Project>

@@ -9,6 +9,7 @@ public class OllamaKernel :
     IKernelCommandHandler<SubmitCode>
 {
     private readonly OllamaApiClient _ollamaClient;
+    private Chat? _chat;
 
     public OllamaKernel(string name, OllamaApiClient ollamaClient) : base(name)
     {
@@ -17,8 +18,6 @@ public class OllamaKernel :
 
     public async Task HandleAsync(SubmitCode command, KernelInvocationContext context)
     {
-        var chat = new Chat(_ollamaClient);
-
         var question = command.Code;
 
         if (string.IsNullOrWhiteSpace(question))
@@ -26,7 +25,9 @@ public class OllamaKernel :
             return;
         }
 
-        await foreach (var answerToken in chat.SendAsync(question))
+        _chat ??= new Chat(_ollamaClient);
+
+        await foreach (var answerToken in _chat.SendAsync(question))
         {
             Console.Write(answerToken);
         }
